@@ -1,17 +1,10 @@
-// routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 
-// On importe les fonctions du contrôleur
-const { getUsers, contact, aboutPage } = require("../controllers/articleController");
+const { createUser, getAllUsers } = require("../controllers/userController");
 
-// Route GET pour /api/users
-router.get("/", getUsers);
-
-// Route POST pour /contact
-router.post("/contact", contact);
-
-// Route GET pour /about
-router.get("/about", aboutPage);
+// Routes
+router.get("/", getAllUsers);    // GET tous les utilisateurs
+router.post("/", createUser);    // POST créer un utilisateur
 
 module.exports = router;

@@ -1,33 +1,29 @@
-// controllers/userController.js
+const asyncHandler = require("express-async-handler");
+const User = require("../models/UserModel");
 
-// Fonction pour renvoyer tous les utilisateurs factices
-const getAllUsers = (req, res) => {
-  const users = [
-    { id: 1, nom: "Selma", email: "selma@example.com" },
-    { id: 2, nom: "Ali", email: "ali@example.com" },
-    { id: 3, nom: "Mouna", email: "mouna@example.com" },
-  ];
+// Créer un utilisateur
+const createUser = asyncHandler(async (req, res) => {
+  const { email, password, name } = req.body;
 
-  res.status(200).json({
-    message: "Liste des utilisateurs récupérée avec succès",
-    users,
-  });
-};
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Veuillez fournir un email et un mot de passe.");
+  }
 
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error("Email déjà utilisé.");
+  }
 
+  const user = await User.create({ email, password, name });
+  res.status(201).json(user);
+});
 
-// Fonction pour créer un utilisateur
-const createUser = (req, res) => {
-  const userData = req.body;
-  console.log("Données reçues par le contrôleur :", userData);
+// Récupérer tous les utilisateurs
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  res.status(200).json(users);
+});
 
-  res.status(201).json({
-    message: "Utilisateur créé avec succès !",
-    user: { id: Date.now(), ...userData },
-  });
-};
-
-module.exports = {
-  getAllUsers,
-  createUser,
-};
+module.exports = { createUser, getAllUsers };

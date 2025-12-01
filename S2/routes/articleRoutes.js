@@ -1,17 +1,20 @@
-const express = require ('express' ) ;
-const router = express.Router () ;
+const express = require('express');
+const router = express.Router();
 
-// On importe les fonctions du controleur
-const { testApi, createArticle } = require('../controllers/articleController');
+// Import des fonctions du contrôleur
+const {
+  createArticle,
+  getAllArticles,
+  getArticleById,
+  updateArticle,
+  deleteArticle,
+} = require('../controllers/articleController');
 
-// Définition des routes
-// Note : Le chemin '/' ici correspondra à la racine de ce que nous definirons dans server. js
+// Routes
+router.get('/', getAllArticles);         // GET tous les articles
+router.get('/:id', getArticleById);      // GET article par ID
+router.post('/', createArticle);         // POST nouvel article
+router.put('/:id', updateArticle);       // PUT mettre à jour
+router.delete('/:id', deleteArticle);    // DELETE article
 
-// Route GET pour /api/test (devient /test dans ce routeur)
-router. get ('/test', testApi);
-
-// Route POST pour /api/articles (devient / dans ce routeur)
-router . post ('/', createArticle) ;
-
-// On exporte le routeur pour l'utiliser dans server. js
-module. exports = router ;
+module.exports = router;
